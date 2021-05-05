@@ -1,0 +1,4 @@
+TODO :
+ - Search in list & in items
+ - Add lists & items
+ - Auto lists indexation
