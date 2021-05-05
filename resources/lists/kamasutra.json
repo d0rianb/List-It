@@ -3,12 +3,152 @@
   "private": true,
   "items": [
     {
-      "title": "Cavalier à la barre",
-      "img": "../resources/images/cavalier-23.png"
+      "title": "Ascent To Desire",
+      "img": "resources/images/kamasutra/Ascent_To_Desire.png"
     },
     {
-      "title": "L'offrande secrète ",
-      "img": "../resources/images/offrande-24.png"
+      "title": "Congrès Suspendu",
+      "img": "resources/images/kamasutra/Congrès_Suspendu.png"
+    },
+    {
+      "title": "Indrani",
+      "img": "resources/images/kamasutra/Indrani.png"
+    },
+    {
+      "title": "L'Amazone",
+      "img": "resources/images/kamasutra/L'Amazone.png"
+    },
+    {
+      "title": "L'Escargot",
+      "img": "resources/images/kamasutra/L'Escargot.png"
+    },
+    {
+      "title": "La Brouette debout",
+      "img": "resources/images/kamasutra/La_Brouette_debout.png"
+    },
+    {
+      "title": "La Charnière",
+      "img": "resources/images/kamasutra/La_Charnière.png"
+    },
+    {
+      "title": "La Courbe en Y",
+      "img": "resources/images/kamasutra/La_Courbe_en_Y.png"
+    },
+    {
+      "title": "La Cowgir Inversée",
+      "img": "resources/images/kamasutra/La_Cowgir_Inversée.png"
+    },
+    {
+      "title": "La Jambe lubrique",
+      "img": "resources/images/kamasutra/La_Jambe_lubrique.png"
+    },
+    {
+      "title": "La Levrette",
+      "img": "resources/images/kamasutra/La_Levrette.png"
+    },
+    {
+      "title": "La Prise",
+      "img": "resources/images/kamasutra/La_Prise.png"
+    },
+    {
+      "title": "La Séduction",
+      "img": "resources/images/kamasutra/La_Séduction.png"
+    },
+    {
+      "title": "La Sirène",
+      "img": "resources/images/kamasutra/La_Sirène.png"
+    },
+    {
+      "title": "Le Bateau à rames",
+      "img": "resources/images/kamasutra/Le_Bateau_à_rames.png"
+    },
+    {
+      "title": "Le Bus à Impériale",
+      "img": "resources/images/kamasutra/Le_Bus_à_Impériale.png"
+    },
+    {
+      "title": "Le Cadenas",
+      "img": "resources/images/kamasutra/Le_Cadenas.png"
+    },
+    {
+      "title": "Le Cheval à bascule",
+      "img": "resources/images/kamasutra/Le_Cheval_à_bascule.png"
+    },
+    {
+      "title": "Le Classique",
+      "img": "resources/images/kamasutra/Le_Classique.png"
+    },
+    {
+      "title": "Le Lotus Couché",
+      "img": "resources/images/kamasutra/Le_Lotus_Couché.png"
+    },
+    {
+      "title": "Le Papillon",
+      "img": "resources/images/kamasutra/Le_Papillon.png"
+    },
+    {
+      "title": "Le Sphynx",
+      "img": "resources/images/kamasutra/Le_Sphynx.png"
+    },
+    {
+      "title": "Le Support",
+      "img": "resources/images/kamasutra/Le_Support.png"
+    },
+    {
+      "title": "Le Triangle",
+      "img": "resources/images/kamasutra/Le_Triangle.png"
+    },
+    {
+      "title": "Les Ciseaux",
+      "img": "resources/images/kamasutra/Les_Ciseaux.png"
+    },
+    {
+      "title": "Les clés croisées",
+      "img": "resources/images/kamasutra/Les_clés_croisées.png"
+    },
+    {
+      "title": "Maitre de la cuisse",
+      "img": "resources/images/kamasutra/Maitre_de_la_cuisse.png"
+    },
+    {
+      "title": "Maitre des escaliers",
+      "img": "resources/images/kamasutra/Maitre_des_escaliers.png"
+    },
+    {
+      "title": "Rock'n'Roller",
+      "img": "resources/images/kamasutra/Rock'n'Roller.png"
+    },
+    {
+      "title": "Splitting Bamboo",
+      "img": "resources/images/kamasutra/Splitting_Bamboo.png"
+    },
+    {
+      "title": "The Close Up",
+      "img": "resources/images/kamasutra/The_Close_Up.png"
+    },
+    {
+      "title": "The G-Force",
+      "img": "resources/images/kamasutra/The_G-Force.png"
+    },
+    {
+      "title": "The Growing Boat",
+      "img": "resources/images/kamasutra/The_Growing_Boat.png"
+    },
+    {
+      "title": "The Landslide",
+      "img": "resources/images/kamasutra/The_Landslide.png"
+    },
+    {
+      "title": "The Laptop",
+      "img": "resources/images/kamasutra/The_Laptop.png"
+    },
+    {
+      "title": "The Squat Balance",
+      "img": "resources/images/kamasutra/The_Squat_Balance.png"
+    },
+    {
+      "title": "The Standing Wheelbarrow",
+      "img": "resources/images/kamasutra/The_Standing_Wheelbarrow.png"
     }
   ]
 }

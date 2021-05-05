@@ -1,5 +1,6 @@
 /*
  * Copyright © 2021 -  Dorian & Co - All right reserved
+ * Credit to Anastasiia Frizen for the illustrations
  */
 
 import 'dart:async';
@@ -134,7 +135,7 @@ class HomePageState extends State<HomePage> {
         title: Text(selectedList?.title ?? widget.title!),
       ),
       drawer: buildDrawer(),
-      body: Center(child: selectedList?.build() ?? const Text('No list selected')),
+      body: Center(child: selectedList ?? const Text('No list selected')),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Increment',
         onPressed: () {},
