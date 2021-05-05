@@ -49,12 +49,12 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   CheckList? selectedList;
-  List<CheckListItem> exampleListItems = [
-    new CheckListItem('First', Image.network('https://via.placeholder.com/150')),
-    new CheckListItem('Second', Image.network('https://via.placeholder.com/150')),
-    new CheckListItem('Third', Image.network('https://via.placeholder.com/150')),
-    new CheckListItem('Etc', Image.network('https://via.placeholder.com/150')),
-  ];
+//  List<CheckListItem> exampleListItems = [
+//    new CheckListItem('First', Image.network('https://via.placeholder.com/150')),
+//    new CheckListItem('Second', Image.network('https://via.placeholder.com/150')),
+//    new CheckListItem('Third', Image.network('https://via.placeholder.com/150')),
+//    new CheckListItem('Etc', Image.network('https://via.placeholder.com/150')),
+//  ];
   List<CheckList> availableLists = [];
   int lastTap = DateTime.now().millisecondsSinceEpoch;
   int consecutiveTaps = 0;
@@ -62,7 +62,7 @@ class HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    availableLists = [new CheckList.withItems('Movies Test', exampleListItems), new CheckList('Others')];
+    availableLists = [new CheckList.withItems('Movies Test', []), new CheckList('Others')];
     loadListsFromJSON().then((json) {
       CheckList newList = CheckList.fromJSON(json);
       setState(() {
@@ -74,7 +74,7 @@ class HomePageState extends State<HomePage> {
   Future<JSON> loadListsFromJSON() async {
 //    final files = await App.dirContents(Directory.current);
 //    print(files);
-    final json = await rootBundle.loadString('resources/lists/movies.json');
+    final json = await rootBundle.loadString('resources/lists/kamasutra.json');
     return JSON.from(jsonDecode(json));
   }
 

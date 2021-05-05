@@ -1,0 +1,14 @@
+{
+  "title": "Kamasutra",
+  "private": true,
+  "items": [
+    {
+      "title": "Cavalier à la barre",
+      "img": "../resources/images/cavalier-23.png"
+    },
+    {
+      "title": "L'offrande secrète ",
+      "img": "../resources/images/offrande-24.png"
+    }
+  ]
+}
