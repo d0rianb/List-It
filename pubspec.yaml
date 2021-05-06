@@ -29,6 +29,7 @@ dependencies:
   flutter_launcher_icons: ^0.7.2
   package_info: ^2.0.0
   shared_preferences: ^2.0.5
+  event_bus: ^2.0.0
 
 flutter_icons:
   android: true

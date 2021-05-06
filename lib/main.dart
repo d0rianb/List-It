@@ -11,8 +11,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:package_info/package_info.dart';
+import 'package:event_bus/event_bus.dart';
 
 import 'CheckList.dart';
+
+EventBus eventBus = EventBus();
 
 void main() {
   runApp(App());
@@ -60,6 +63,7 @@ class HomePageState extends State<HomePage> {
     super.initState();
     getAppInfos();
     loadListsFromJSON();
+    eventBus.on().listen((event) {});
   }
 
   Future<void> getAppInfos() async {
@@ -136,27 +140,32 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(selectedList?.title ?? widget.title!),
-        ),
-        drawer: buildDrawer(),
-        body: Center(child: selectedList ?? const Text('No list selected')),
-        floatingActionButton: FloatingActionButton(
-          tooltip: 'Create',
-          onPressed: () {},
-          child: Icon(Icons.add),
-        ),
-        bottomNavigationBar: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Dorian&Co © ${packageInfo.appName} -  v${packageInfo.version}',
-                style: TextStyle(color: Colors.grey[500]),
-              ),
-            ),
-          ],
-        ));
+      appBar: AppBar(
+        title: Text(selectedList?.title ?? widget.title!),
+        actions: [],
+      ),
+      drawer: buildDrawer(),
+      drawerEdgeDragWidth: MediaQuery.of(context).size.width / 2,
+      body: Center(child: selectedList ?? const Text('No list selected')),
+      floatingActionButton: FloatingActionButton(
+        tooltip: 'Create',
+        onPressed: () {},
+        child: Icon(Icons.add),
+      ),
+      bottomNavigationBar: (selectedList == null)
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Dorian&Co © ${packageInfo.appName} -  v${packageInfo.version}',
+                    style: TextStyle(color: Colors.grey[500], backgroundColor: Colors.transparent),
+                  ),
+                ),
+              ],
+            )
+          : null,
+    );
   }
 }
