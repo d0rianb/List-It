@@ -6,6 +6,8 @@ import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 typedef JSON = Map<String, dynamic>;
 
 class CircularClipper extends CustomClipper<Path> {
@@ -43,9 +45,11 @@ class CheckList extends StatelessWidget {
       } else {
         img = Image.asset(item['img'].replaceAll('../', ''));
       }
-      this.items.add(new CheckListItem(item['title'], img));
+      this.items.add(new CheckListItem(item['title'], img, this));
     }
   }
+
+  String get id => title.toLowerCase().replaceAll(' ', '_');
 
   Widget build(BuildContext context) {
     return items.length > 0
@@ -53,28 +57,66 @@ class CheckList extends StatelessWidget {
             crossAxisCount: 2,
             children: items,
           )
-        : Center(child: const Text('This list have no item.'));
+        : Center(
+            child: const Text(
+            'This list have no item.',
+            style: TextStyle(fontSize: 18),
+          ));
   }
 }
 
 class CheckListItem extends StatefulWidget {
   final String name;
   final Image img;
+  final CheckList list;
 
-  CheckListItem(this.name, this.img);
+  CheckListItem(this.name, this.img, this.list);
 
   CheckListItemState createState() => CheckListItemState();
 }
 
 class CheckListItemState extends State<CheckListItem> with TickerProviderStateMixin {
   bool isChecked = false;
-  late AnimationController controller = AnimationController(vsync: this, duration: Duration(milliseconds: 200));
+  late AnimationController controller = AnimationController(vsync: this, duration: Duration(milliseconds: 300));
   late Animation<int> animation = IntTween(begin: 0, end: 200).animate(controller);
+
+  String get id => widget.list.id + widget.name.toLowerCase().replaceAll(' ', '_');
+
+  @override
+  void initState() {
+    super.initState();
+    checkIfInitiallyChecked();
+  }
 
   @override
   void dispose() {
     controller.dispose();
     super.dispose();
+  }
+
+  Future<void> checkIfInitiallyChecked() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var stringListName = '${widget.list.id}-checked';
+    var listIdChecked = prefs.getStringList(stringListName);
+    if (listIdChecked == null) return;
+    if (listIdChecked.contains(id)) {
+      setState(() => isChecked = true);
+    }
+  }
+
+  Future<void> saveItem() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var stringListName = '${widget.list.id}-checked';
+    var listIdChecked = prefs.getStringList(stringListName);
+    if (listIdChecked != null) {
+      if (isChecked) {
+        prefs.setStringList(stringListName, [...listIdChecked, id]);
+      } else {
+        prefs.setStringList(stringListName, listIdChecked.where((listId) => listId != id).toList());
+      }
+    } else if (isChecked) {
+      prefs.setStringList(stringListName, [id]);
+    }
   }
 
   @override
@@ -135,7 +177,7 @@ class CheckListItemState extends State<CheckListItem> with TickerProviderStateMi
                 splashColor: Colors.grey.withAlpha(30),
                 onTap: () {
                   setState(() => isChecked = !isChecked);
-//                  controller.forward();
+                  saveItem();
                 }),
             type: MaterialType.transparency,
           ),

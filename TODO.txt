@@ -1,12 +1,5 @@
 TODO :
- - Add lists & items
- - Auto lists indexation
- - Name
  - Animation duration
- - grid spacing
  - Local storage for checked items
- - Logo
- - Footer
- - Version
  - Count
  - Filters

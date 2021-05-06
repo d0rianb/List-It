@@ -10,6 +10,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 
+import 'package:package_info/package_info.dart';
+
 import 'CheckList.dart';
 
 void main() {
@@ -46,11 +48,23 @@ class HomePageState extends State<HomePage> {
   int lastTap = DateTime.now().millisecondsSinceEpoch;
   int consecutiveTaps = 0;
   bool showPrivateLists = false;
+  PackageInfo packageInfo = PackageInfo(
+    appName: 'Unknown',
+    packageName: 'Unknown',
+    version: 'Unknown',
+    buildNumber: 'Unknown',
+  );
 
   @override
   void initState() {
     super.initState();
+    getAppInfos();
     loadListsFromJSON();
+  }
+
+  Future<void> getAppInfos() async {
+    final PackageInfo info = await PackageInfo.fromPlatform();
+    setState(() => packageInfo = info);
   }
 
   void loadListsFromJSON() async {
@@ -122,16 +136,27 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(selectedList?.title ?? widget.title!),
-      ),
-      drawer: buildDrawer(),
-      body: Center(child: selectedList ?? const Text('No list selected')),
-      floatingActionButton: FloatingActionButton(
-        tooltip: 'Increment',
-        onPressed: () {},
-        child: Icon(Icons.add),
-      ),
-    );
+        appBar: AppBar(
+          title: Text(selectedList?.title ?? widget.title!),
+        ),
+        drawer: buildDrawer(),
+        body: Center(child: selectedList ?? const Text('No list selected')),
+        floatingActionButton: FloatingActionButton(
+          tooltip: 'Create',
+          onPressed: () {},
+          child: Icon(Icons.add),
+        ),
+        bottomNavigationBar: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Dorian&Co © ${packageInfo.appName} -  v${packageInfo.version}',
+                style: TextStyle(color: Colors.grey[500]),
+              ),
+            ),
+          ],
+        ));
   }
 }

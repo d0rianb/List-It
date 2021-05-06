@@ -27,6 +27,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   permission_handler: ^7.1.0
   flutter_launcher_icons: ^0.7.2
+  package_info: ^2.0.0
+  shared_preferences: ^2.0.5
 
 flutter_icons:
   android: true
