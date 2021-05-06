@@ -27,19 +27,22 @@ class CircularClipper extends CustomClipper<Path> {
 class CheckList extends StatelessWidget {
   String title = 'Unnamed list';
   List<CheckListItem> items = [];
+  bool private = false;
 
-  CheckList(this.title);
-
-  CheckList.withItems(this.title, this.items);
+  CheckList(this.title, this.items);
 
   CheckList.fromJSON(JSON json) {
-    this.title = json['title'];
+    title = json['title'];
+    if (json.containsKey('private')) {
+      private = json['private'];
+    }
     for (var item in json['items']) {
       Image? img;
-      if (item['img'].startsWith('http'))
-        img = Image.network(item['img']);
-      else
+      if (item['img'].startsWith('http')) {
+        img = Image.network('https://picsum.photos/250?image=9'); // Placeholder for item['img']
+      } else {
         img = Image.asset(item['img'].replaceAll('../', ''));
+      }
       this.items.add(new CheckListItem(item['title'], img));
     }
   }
@@ -65,7 +68,7 @@ class CheckListItem extends StatefulWidget {
 
 class CheckListItemState extends State<CheckListItem> with TickerProviderStateMixin {
   bool isChecked = false;
-  late AnimationController controller = AnimationController(vsync: this, duration: Duration(milliseconds: 175));
+  late AnimationController controller = AnimationController(vsync: this, duration: Duration(milliseconds: 200));
   late Animation<int> animation = IntTween(begin: 0, end: 200).animate(controller);
 
   @override
@@ -81,7 +84,7 @@ class CheckListItemState extends State<CheckListItem> with TickerProviderStateMi
         return Stack(children: <Widget>[
           Card(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-            margin: EdgeInsets.all(16),
+            margin: EdgeInsets.all(4),
             clipBehavior: Clip.antiAlias,
             child: Column(
               children: [
@@ -132,7 +135,7 @@ class CheckListItemState extends State<CheckListItem> with TickerProviderStateMi
                 splashColor: Colors.grey.withAlpha(30),
                 onTap: () {
                   setState(() => isChecked = !isChecked);
-                  controller.forward(from: 0);
+//                  controller.forward();
                 }),
             type: MaterialType.transparency,
           ),
