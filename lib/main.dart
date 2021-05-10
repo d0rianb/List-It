@@ -65,6 +65,7 @@ class HomePageState extends State<HomePage> {
     getAppInfos();
     loadListsFromJSON();
     eventBus.on<CheckItemEvent>().listen((event) => setState(() {}));
+    eventBus.on<RequestItemCheck>().listen((event) => setState(() {}));
   }
 
   Future<void> getAppInfos() async {

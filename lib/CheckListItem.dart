@@ -31,14 +31,22 @@ class CheckListItem extends StatefulWidget {
 
 class CheckListItemState extends State<CheckListItem> with TickerProviderStateMixin {
   bool isChecked = false;
-  late AnimationController controller;
-  late Animation<int> animation = IntTween(begin: 0, end: 100).animate(controller);
+  late final String stringListName = '${widget.list.id}-checked';
+  late final AnimationController controller;
+  late final Animation<int> animation = IntTween(begin: 0, end: 100).animate(controller);
 
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(vsync: this, duration: Duration(milliseconds: 150));
-    checkIfInitiallyChecked(); // BUG
+    controller = AnimationController(vsync: this, duration: Duration(milliseconds: 175));
+    checkIfInitiallyChecked();
+    eventBus.on<RequestItemCheck>().listen((event) {
+      if (event.itemId != widget.id || !mounted) return;
+      if (event.check == true)
+        check();
+      else
+        unCheck();
+    });
   }
 
   @override
@@ -52,6 +60,7 @@ class CheckListItemState extends State<CheckListItem> with TickerProviderStateMi
     controller.forward();
     widget.onCheck();
     eventBus.fire(CheckItemEvent(widget.id, widget.list.id, isChecked));
+    saveItem();
   }
 
   void unCheck() {
@@ -59,12 +68,12 @@ class CheckListItemState extends State<CheckListItem> with TickerProviderStateMi
     controller.reverse();
     widget.onUnCheck();
     eventBus.fire(CheckItemEvent(widget.id, widget.list.id, isChecked));
+    saveItem();
   }
 
   Future<void> checkIfInitiallyChecked() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var stringListName = '${widget.list.id}-checked';
-    var listIdChecked = prefs.getStringList(stringListName);
+    List<String>? listIdChecked = prefs.getStringList(stringListName);
     if (listIdChecked == null) return;
     if (listIdChecked.contains(widget.id)) {
       check();
@@ -73,8 +82,7 @@ class CheckListItemState extends State<CheckListItem> with TickerProviderStateMi
 
   Future<void> saveItem() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var stringListName = '${widget.list.id}-checked';
-    var listIdChecked = prefs.getStringList(stringListName);
+    List<String>? listIdChecked = prefs.getStringList(stringListName);
     if (listIdChecked != null) {
       if (isChecked) {
         prefs.setStringList(stringListName, [...listIdChecked, widget.id]);
@@ -150,7 +158,6 @@ class CheckListItemState extends State<CheckListItem> with TickerProviderStateMi
                   } else {
                     unCheck();
                   }
-                  saveItem();
                   eventBus.fire(CheckItemEvent(widget.id, widget.list.id, isChecked));
                 }),
             type: MaterialType.transparency,
@@ -168,4 +175,11 @@ class CheckItemEvent {
   final bool isChecked;
 
   CheckItemEvent(this.itemId, this.listId, this.isChecked);
+}
+
+class RequestItemCheck {
+  final String itemId;
+  final bool check;
+
+  RequestItemCheck(this.itemId, this.check);
 }

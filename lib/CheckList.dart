@@ -3,6 +3,8 @@
  */
 
 import 'package:flutter/material.dart';
+import 'package:list_it/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'CheckListItem.dart';
 
@@ -35,16 +37,26 @@ class CheckList extends StatelessWidget {
 
   String get id => title.toLowerCase().replaceAll(' ', '_');
 
+  Future<void> setPrefs(List<String> listId) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setStringList('${id}-checked', listId);
+  }
+
   void checkAll() {
     for (var item in items) {
-      // item.check();
+      eventBus.fire(RequestItemCheck(item.id, true));
     }
+    var stringList = items.map((CheckListItem item) => item.id).toList();
+    checkedItems = Set.from(stringList);
+    setPrefs(stringList);
   }
 
   void unCheckAll() {
     for (var item in items) {
-      // item..unCheck();
+      eventBus.fire(RequestItemCheck(item.id, false));
     }
+    checkedItems = {};
+    setPrefs([]);
   }
 
   @override
