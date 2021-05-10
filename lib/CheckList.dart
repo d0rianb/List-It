@@ -2,7 +2,6 @@
  * Copyright © 2021 -  Dorian & Co - All right reserved
  */
 
-import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import 'CheckListItem.dart';
@@ -14,7 +13,7 @@ class CheckList extends StatelessWidget {
   String title = 'Unnamed list';
   List<CheckListItem> items = [];
   bool private = false;
-  ValueNotifier<int> checkedItems = new ValueNotifier(0);
+  int checkedItems = 0;
 
   CheckList(this.title, this.items);
 
@@ -30,56 +29,38 @@ class CheckList extends StatelessWidget {
       } else {
         img = Image.asset(item['img'].replaceAll('../', ''));
       }
-      this.items.add(new CheckListItem(item['title'], img, this));
+      this.items.add(new CheckListItem(key: UniqueKey(), name: item['title'], img: img, list: this));
     }
   }
 
   String get id => title.toLowerCase().replaceAll(' ', '_');
 
+  void checkAll() {
+    for (var item in items) {
+      item.check();
+    }
+  }
+
+  void unCheckAll() {
+    for (var item in items) {
+      item..unCheck();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-      valueListenable: checkedItems,
-      builder: (context, value, child) {
-        if (items.length > 0) {
-          return Column(
-            children: [
-              Container(
-                // padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-                margin: const EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
-                  color: Colors.blueGrey[10],
-                  border: Border.all(color: Colors.grey[300]!, width: .5),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    DropdownButton(items: [DropdownMenuItem(child: const Text('Filters'))]),
-                    Text(
-                      'Checked item${checkedItems.value > 1 ? 's' : ''}: ${checkedItems.value}/${items.length}',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  children: items,
-                ),
-              ),
-            ],
-          );
-        } else {
-          return Center(
-            child: const Text(
-              'This list have no item.',
-              style: TextStyle(fontSize: 18),
-            ),
-          );
-        }
-      },
-    );
+    if (items.length > 0) {
+      return GridView.count(
+        crossAxisCount: 2,
+        children: items,
+      );
+    } else {
+      return Center(
+        child: const Text(
+          'This list have no item.',
+          style: TextStyle(fontSize: 18),
+        ),
+      );
+    }
   }
 }

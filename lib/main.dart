@@ -9,6 +9,7 @@ import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:list_it/CheckListItem.dart';
 
 import 'package:package_info/package_info.dart';
 import 'package:event_bus/event_bus.dart';
@@ -63,7 +64,7 @@ class HomePageState extends State<HomePage> {
     super.initState();
     getAppInfos();
     loadListsFromJSON();
-    eventBus.on().listen((event) {});
+    eventBus.on<CheckItemEvent>().listen((event) => setState(() {}));
   }
 
   Future<void> getAppInfos() async {
@@ -115,7 +116,7 @@ class HomePageState extends State<HomePage> {
               int now = DateTime.now().millisecondsSinceEpoch;
               if (Duration(milliseconds: now - lastTap) < kDoubleTapTimeout) {
                 consecutiveTaps++;
-                if (consecutiveTaps == 5) {
+                if (consecutiveTaps == 4) {
                   setState(() => showPrivateLists = !showPrivateLists);
                   loadListsFromJSON();
                 }
@@ -139,10 +140,47 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    String counter = (selectedList == null) ? '' : '${selectedList!.checkedItems}/${selectedList!.items.length}';
     return Scaffold(
       appBar: AppBar(
         title: Text(selectedList?.title ?? widget.title!),
-        actions: [],
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Center(
+              child: Text(
+                counter,
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+          ),
+          Padding(
+              padding: EdgeInsets.all(10.0),
+              // TODO: move inside its own methods/class
+              child: PopupMenuButton<String>(
+                onSelected: (String result) {
+                  if (selectedList == null) return;
+                  switch (result) {
+                    case 'checkall':
+                      selectedList!.checkAll();
+                      break;
+                    case 'uncheckall':
+                      selectedList!.unCheckAll();
+                      break;
+                  }
+                },
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  const PopupMenuItem<String>(
+                    value: 'checkall',
+                    child: Text('Check all'),
+                  ),
+                  const PopupMenuItem<String>(
+                    value: 'uncheckall',
+                    child: Text('Uncheck all'),
+                  )
+                ],
+              ))
+        ],
       ),
       drawer: buildDrawer(),
       drawerEdgeDragWidth: MediaQuery.of(context).size.width / 2,

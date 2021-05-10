@@ -1,3 +1,5 @@
 TODO :
- - Count
  - Filters
+ - Check all / Uncheck all
+ - Search
+ - Create list / items

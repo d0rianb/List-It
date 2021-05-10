@@ -8,13 +8,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'CheckList.dart';
 import 'CircularClipper.dart';
+import 'main.dart' show eventBus;
 
 class CheckListItem extends StatefulWidget {
   final String name;
   final Image img;
   final CheckList list;
+  GlobalKey<CheckListItemState> stateKey = GlobalKey<CheckListItemState>();
 
-  CheckListItem(this.name, this.img, this.list);
+  CheckListItem({Key? key, required this.name, required this.img, required this.list}) : super(key: key);
+
+  void check() {
+    print(stateKey.currentState);
+    stateKey.currentState?.check();
+  }
+
+  void unCheck() {
+    stateKey.currentState?.unCheck();
+  }
 
   CheckListItemState createState() => CheckListItemState();
 }
@@ -39,14 +50,27 @@ class CheckListItemState extends State<CheckListItem> with TickerProviderStateMi
     super.dispose();
   }
 
+  void check() {
+    setState(() => isChecked = true);
+    controller.forward();
+    widget.list.checkedItems++;
+    eventBus.fire(CheckItemEvent(id, widget.list.id, isChecked));
+  }
+
+  void unCheck() {
+    setState(() => isChecked = false);
+    controller.reverse();
+    widget.list.checkedItems--;
+    eventBus.fire(CheckItemEvent(id, widget.list.id, isChecked));
+  }
+
   Future<void> checkIfInitiallyChecked() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var stringListName = '${widget.list.id}-checked';
     var listIdChecked = prefs.getStringList(stringListName);
     if (listIdChecked == null) return;
     if (listIdChecked.contains(id)) {
-      setState(() => isChecked = true);
-      widget.list.checkedItems.value++;
+      check();
     }
   }
 
@@ -68,6 +92,7 @@ class CheckListItemState extends State<CheckListItem> with TickerProviderStateMi
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
+      key: widget.stateKey,
       builder: (context, anim) {
         return Stack(children: <Widget>[
           Card(
@@ -125,12 +150,13 @@ class CheckListItemState extends State<CheckListItem> with TickerProviderStateMi
                   setState(() => isChecked = !isChecked);
                   if (isChecked) {
                     controller.forward();
-                    widget.list.checkedItems.value++;
+                    widget.list.checkedItems++;
                   } else {
                     controller.reverse();
-                    widget.list.checkedItems.value--;
+                    widget.list.checkedItems--;
                   }
                   saveItem();
+                  eventBus.fire(CheckItemEvent(id, widget.list.id, isChecked));
                 }),
             type: MaterialType.transparency,
           ),
@@ -139,4 +165,12 @@ class CheckListItemState extends State<CheckListItem> with TickerProviderStateMi
       animation: controller,
     );
   }
+}
+
+class CheckItemEvent {
+  final String itemId;
+  final String listId;
+  final bool isChecked;
+
+  CheckItemEvent(this.itemId, this.listId, this.isChecked);
 }

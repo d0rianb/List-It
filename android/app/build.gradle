@@ -48,7 +48,7 @@ android {
                 variant.outputs.all {
                     def appName = "list_it"
                     def newName
-                    newName = "${appName}${defaultConfig.versionName}_${variant.getFlavorName()}.apk"
+                    newName = "${appName}-v${defaultConfig.versionName}}.apk"
                     outputFileName = newName
                 }
             }
