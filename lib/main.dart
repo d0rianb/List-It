@@ -140,7 +140,7 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    String counter = (selectedList == null) ? '' : '${selectedList!.checkedItems}/${selectedList!.items.length}';
+    String counter = (selectedList == null) ? '' : '${selectedList!.checkedItems.length}/${selectedList!.items.length}';
     return Scaffold(
       appBar: AppBar(
         title: Text(selectedList?.title ?? widget.title!),

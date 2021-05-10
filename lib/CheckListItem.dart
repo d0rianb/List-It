@@ -14,20 +14,19 @@ class CheckListItem extends StatefulWidget {
   final String name;
   final Image img;
   final CheckList list;
-  GlobalKey<CheckListItemState> stateKey = GlobalKey<CheckListItemState>();
+  final GlobalKey<CheckListItemState> stateKey = GlobalKey<CheckListItemState>();
 
   CheckListItem({Key? key, required this.name, required this.img, required this.list}) : super(key: key);
 
-  void check() {
-    print(stateKey.currentState);
-    stateKey.currentState?.check();
-  }
+  void onCheck() => list.checkedItems.add(id);
 
-  void unCheck() {
-    stateKey.currentState?.unCheck();
-  }
+  void onUnCheck() => list.checkedItems.remove(id);
+
+  String get id => list.id + name.toLowerCase().replaceAll(' ', '_');
 
   CheckListItemState createState() => CheckListItemState();
+
+  CheckListItemState? get state => stateKey.currentState;
 }
 
 class CheckListItemState extends State<CheckListItem> with TickerProviderStateMixin {
@@ -35,13 +34,11 @@ class CheckListItemState extends State<CheckListItem> with TickerProviderStateMi
   late AnimationController controller;
   late Animation<int> animation = IntTween(begin: 0, end: 100).animate(controller);
 
-  String get id => widget.list.id + widget.name.toLowerCase().replaceAll(' ', '_');
-
   @override
   void initState() {
     super.initState();
     controller = AnimationController(vsync: this, duration: Duration(milliseconds: 150));
-    checkIfInitiallyChecked();
+    checkIfInitiallyChecked(); // BUG
   }
 
   @override
@@ -53,15 +50,15 @@ class CheckListItemState extends State<CheckListItem> with TickerProviderStateMi
   void check() {
     setState(() => isChecked = true);
     controller.forward();
-    widget.list.checkedItems++;
-    eventBus.fire(CheckItemEvent(id, widget.list.id, isChecked));
+    widget.onCheck();
+    eventBus.fire(CheckItemEvent(widget.id, widget.list.id, isChecked));
   }
 
   void unCheck() {
     setState(() => isChecked = false);
     controller.reverse();
-    widget.list.checkedItems--;
-    eventBus.fire(CheckItemEvent(id, widget.list.id, isChecked));
+    widget.onUnCheck();
+    eventBus.fire(CheckItemEvent(widget.id, widget.list.id, isChecked));
   }
 
   Future<void> checkIfInitiallyChecked() async {
@@ -69,7 +66,7 @@ class CheckListItemState extends State<CheckListItem> with TickerProviderStateMi
     var stringListName = '${widget.list.id}-checked';
     var listIdChecked = prefs.getStringList(stringListName);
     if (listIdChecked == null) return;
-    if (listIdChecked.contains(id)) {
+    if (listIdChecked.contains(widget.id)) {
       check();
     }
   }
@@ -80,22 +77,22 @@ class CheckListItemState extends State<CheckListItem> with TickerProviderStateMi
     var listIdChecked = prefs.getStringList(stringListName);
     if (listIdChecked != null) {
       if (isChecked) {
-        prefs.setStringList(stringListName, [...listIdChecked, id]);
+        prefs.setStringList(stringListName, [...listIdChecked, widget.id]);
       } else {
-        prefs.setStringList(stringListName, listIdChecked.where((listId) => listId != id).toList());
+        prefs.setStringList(stringListName, listIdChecked.where((listId) => listId != widget.id).toList());
       }
     } else if (isChecked) {
-      prefs.setStringList(stringListName, [id]);
+      prefs.setStringList(stringListName, [widget.id]);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      key: widget.stateKey,
       builder: (context, anim) {
         return Stack(children: <Widget>[
           Card(
+            key: widget.stateKey,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
             margin: EdgeInsets.all(4),
             clipBehavior: Clip.antiAlias,
@@ -149,14 +146,12 @@ class CheckListItemState extends State<CheckListItem> with TickerProviderStateMi
                 onTap: () {
                   setState(() => isChecked = !isChecked);
                   if (isChecked) {
-                    controller.forward();
-                    widget.list.checkedItems++;
+                    check();
                   } else {
-                    controller.reverse();
-                    widget.list.checkedItems--;
+                    unCheck();
                   }
                   saveItem();
-                  eventBus.fire(CheckItemEvent(id, widget.list.id, isChecked));
+                  eventBus.fire(CheckItemEvent(widget.id, widget.list.id, isChecked));
                 }),
             type: MaterialType.transparency,
           ),

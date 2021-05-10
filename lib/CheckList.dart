@@ -13,7 +13,7 @@ class CheckList extends StatelessWidget {
   String title = 'Unnamed list';
   List<CheckListItem> items = [];
   bool private = false;
-  int checkedItems = 0;
+  Set<String> checkedItems = {};
 
   CheckList(this.title, this.items);
 
@@ -37,13 +37,13 @@ class CheckList extends StatelessWidget {
 
   void checkAll() {
     for (var item in items) {
-      item.check();
+      // item.check();
     }
   }
 
   void unCheckAll() {
     for (var item in items) {
-      item..unCheck();
+      // item..unCheck();
     }
   }
 
