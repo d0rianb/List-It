@@ -5,16 +5,16 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:list_it/CheckListItem.dart';
 
 import 'package:package_info/package_info.dart';
 import 'package:event_bus/event_bus.dart';
 
+import 'string_extension.dart';
 import 'CheckList.dart';
+import 'CheckListItem.dart';
 
 EventBus eventBus = EventBus();
 
@@ -52,6 +52,7 @@ class HomePageState extends State<HomePage> {
   int lastTap = DateTime.now().millisecondsSinceEpoch;
   int consecutiveTaps = 0;
   bool showPrivateLists = false;
+  String? filter;
   PackageInfo packageInfo = PackageInfo(
     appName: 'Unknown',
     packageName: 'Unknown',
@@ -178,6 +179,21 @@ class HomePageState extends State<HomePage> {
                   const PopupMenuItem<String>(
                     value: 'uncheckall',
                     child: Text('Uncheck all'),
+                  ),
+                  const PopupMenuDivider(),
+                  PopupMenuItem(
+                    child: DropdownButton<String>(
+                        iconSize: 24,
+                        elevation: 16,
+                        hint: filter == null ? const Text('Filters') : Text('Filters: ${filter!.capitalize()} items'),
+                        items: [
+                          DropdownMenuItem<String>(value: 'selected', child: Text('Only Selected Items')),
+                          DropdownMenuItem<String>(value: 'unselected', child: Text('Only Unselected Items')),
+                        ],
+                        onChanged: (String? value) {
+                          setState(() => filter = value);
+                          print(filter);
+                        }),
                   )
                 ],
               ))
