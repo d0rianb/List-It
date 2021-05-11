@@ -46,9 +46,9 @@ android {
             signingConfig signingConfigs.debug
             applicationVariants.all { variant ->
                 variant.outputs.all {
-                    def appName = "list_it"
+                    def appName = "list-it"
                     def newName
-                    newName = "${appName}-v${defaultConfig.versionName}}.apk"
+                    newName = "${appName}-v${defaultConfig.versionName}.apk"
                     outputFileName = newName
                 }
             }
